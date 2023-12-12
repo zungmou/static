@@ -32,6 +32,9 @@ p,
 li>a {
     font-size: 18pt;
     line-height: 26pt;
+}
+
+li>a {
     text-decoration: dotted underline 3px;
 }
 
