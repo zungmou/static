@@ -1,0 +1,9 @@
+.Post-NormalMain .Post-Header,
+.Post-NormalMain>div,
+.Post-NormalSub>div {
+    width: auto;
+}
+
+.ztext p {
+    text-align: justify
+}

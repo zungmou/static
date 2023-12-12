@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon"
+        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAvklEQVR4nM1SwQ3CMAzsjylgD7pE+fSPWodfB2GP8smzchDTsIUt5RV0baGVgoqqCIGlSLZzOfvsZNnfWO3kTk4DOfFVp3tiOQ+xBviGNccdYmAjAnqCAWAtyamd5eyYe2HeEIifVSxqlnYilBa5iUB8RGBY874KS9Fcw+Z40y1iHPjIDcRaQmLcAfeaLarhQeXkMMqw8E+d7sauLLDfmIEmEvCyhGEmCxLMiiEC+3GNxHJZtUZKnUHyV/6ZPQBb9IcxD5r80wAAAABJRU5ErkJggg==">
+    <title>井字格游戏</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            zoom: 1.8;
+            color: #fff;
+            background-color: #000;
+        }
+
+        header {
+            display: grid;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0px auto;
+            width: fit-content;
+
+        }
+
+        header>h1 {
+            margin: 10px;
+        }
+
+        header>h2 {
+            margin: 10px;
+            margin-top: 0;
+        }
+
+        .board {
+            width: fit-content;
+            display: grid;
+            grid-template-columns: repeat(3, calc(100vh / 10));
+            gap: 0px;
+            margin: 20px auto;
+        }
+
+        .cell {
+            width: calc(100vh / 10);
+            height: calc(100vh / 10);
+            outline: 2px solid #fff;
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background-color: #000;
+        }
+
+        .cell:hover {
+            background-color: #404040;
+        }
+
+        .title-letter-jing {
+            color: #ff0000;
+        }
+
+        .title-letter-zi {
+            color: #ffa500;
+        }
+
+        .title-letter-ge {
+            color: #ffff00;
+        }
+
+        .title-letter-you {
+            color: #00ff00;
+        }
+
+        .title-letter-xi {
+            color: #0000ff;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="player-options">
+        <label>
+            <input type="radio" name="player-mode" value="two-players"> 与另一名玩家对战
+        </label>
+        <label>
+            <input type="radio" name="player-mode" value="computer" checked> 与计算机对战
+        </label>
+    </div>
+    <header>
+        <h1>
+            <!--用 span 包裹“井字格游戏”每一个字并分别设置不同的类名-->
+            <span class="title-letter-jing">井</span>
+            <span class="title-letter-zi">字</span>
+            <span class="title-letter-ge">格</span>
+            <span class="title-letter-you">游</span>
+            <span class="title-letter-xi">戏</span>
+        </h1>
+        <h2>SHERO 专用版</h2>
+        <button id="resetButton">重置</button>
+    </header>
+    <div class="board" id="board">
+        <div class="cell" onclick="makeMove(0, 0)" id="cell-0-0"></div>
+        <div class="cell" onclick="makeMove(0, 1)" id="cell-0-1"></div>
+        <div class="cell" onclick="makeMove(0, 2)" id="cell-0-2"></div>
+        <div class="cell" onclick="makeMove(1, 0)" id="cell-1-0"></div>
+        <div class="cell" onclick="makeMove(1, 1)" id="cell-1-1"></div>
+        <div class="cell" onclick="makeMove(1, 2)" id="cell-1-2"></div>
+        <div class="cell" onclick="makeMove(2, 0)" id="cell-2-0"></div>
+        <div class="cell" onclick="makeMove(2, 1)" id="cell-2-1"></div>
+        <div class="cell" onclick="makeMove(2, 2)" id="cell-2-2"></div>
+    </div>
+    <div id="message"></div>
+    <script>
+        // 存储玩家选择，默认为与计算机对战
+        let playerMode = 'computer';
+        // 存储当前玩家，默认为X
+        let currentPlayer = 'X';
+        // 存储当前游戏状态，默认为空
+        let board = [
+            ['', '', ''],
+            ['', '', ''],
+            ['', '', '']
+        ];
+
+
+        /**
+         * 处理玩家选择变更事件
+         */
+        function handlePlayerModeChange() {
+            const playerModeRadioButtons = document.getElementsByName('player-mode');
+            for (const radioButton of playerModeRadioButtons) {
+                if (radioButton.checked) {
+                    playerMode = radioButton.value;
+                    resetGame();
+                    break;
+                }
+            }
+        }
+
+        // 注册玩家选择变更事件处理程序
+        const playerModeRadioButtons = document.getElementsByName('player-mode');
+        for (const radioButton of playerModeRadioButtons) {
+            radioButton.addEventListener('change', handlePlayerModeChange);
+        }
+
+        /**
+         * 重置游戏
+         */
+        function resetGame() {
+            // 重置当前玩家和游戏状态
+            currentPlayer = 'X';
+            board = [
+                ['', '', ''],
+                ['', '', ''],
+                ['', '', '']
+            ];
+
+            // 清空单元格内容
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => cell.textContent = '');
+
+            // 重置消息区域
+            document.getElementById('message').textContent = '';
+        }
+
+        // 注册重置按钮点击事件处理程序
+        document.getElementById('resetButton').addEventListener('click', resetGame);
+
+        /**
+         * 计算机的移动
+         */
+        function computerMove() {
+            if (currentPlayer === 'O' && playerMode === 'computer') {
+                const bestMove = findBestMove();
+
+                // 如果找到最佳移动，则执行该移动
+                if (bestMove) {
+                    makeMove(bestMove.row, bestMove.col);
+                }
+            }
+        }
+
+        /**
+         * 查找最佳移动
+         * @returns 最佳移动
+         */
+        function findBestMove() {
+            // 初始化最佳移动和最佳分数
+            let bestMove = null;
+            let bestScore = -Infinity;
+
+            // 遍历所有空闲的单元格
+            for (let row = 0; row < 3; row++) {
+                for (let col = 0; col < 3; col++) {
+                    if (board[row][col] === '') {
+                        // 假设计算机在当前单元格下棋
+                        board[row][col] = 'O';
+                        // 计算当前移动的分数，使用Minimax算法
+                        const score = minimax(board, 0, false);
+                        // 撤销当前移动
+                        board[row][col] = '';
+                        // 更新最佳移动
+                        if (score > bestScore) {
+                            bestScore = score;
+                            bestMove = { row, col };
+                        }
+                    }
+                }
+            }
+
+            return bestMove;
+        }
+
+        /**
+         * 在指定的单元格下棋
+         * @param {number} row 单元格行号
+         * @param {number} col 单元格列号
+         */
+        function makeMove(row, col) {
+            if (board[row][col] === '' && !checkWinner()) {
+                if (playerMode === 'two-players') {
+                    // 与另一名玩家对战
+                    board[row][col] = currentPlayer;
+                    document.getElementById(`cell-${row}-${col}`).textContent = currentPlayer;
+                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                    checkWinner();
+                } else if (playerMode === 'computer') {
+                    // 与计算机对战
+                    if (currentPlayer === 'X') {
+                        board[row][col] = 'X';
+                        document.getElementById(`cell-${row}-${col}`).textContent = 'X';
+                        currentPlayer = 'O';
+                        checkWinner();
+                        computerMove(); // 计算机的回合
+                    }
+                    else if (currentPlayer === 'O') {
+                        board[row][col] = 'O';
+                        document.getElementById(`cell-${row}-${col}`).textContent = 'O';
+                        currentPlayer = 'X';
+                        checkWinner();
+                    }
+                }
+            }
+        }
+
+        /**
+         * 使用Minimax算法计算当前游戏状态的分数
+         * @param {string[][]} board 当前游戏状态
+         * @param {number} depth 当前搜索深度
+         * @param {boolean} isMaximizing 是否为最大化玩家
+         * @returns 分数
+         */
+        function minimax(board, depth, isMaximizing) {
+            // 检查游戏是否结束
+            const result = checkResult();
+
+            // 如果游戏结束，返回分数
+            if (result !== null) {
+                return score(result, depth);
+            }
+
+            if (isMaximizing) {
+                let bestScore = -Infinity;
+                for (let row = 0; row < 3; row++) {
+                    for (let col = 0; col < 3; col++) {
+                        if (board[row][col] === '') {
+                            board[row][col] = 'O';
+                            const score = minimax(board, depth + 1, false);
+                            board[row][col] = '';
+                            bestScore = Math.max(score, bestScore);
+                        }
+                    }
+                }
+                return bestScore;
+            } else {
+                let bestScore = Infinity;
+                for (let row = 0; row < 3; row++) {
+                    for (let col = 0; col < 3; col++) {
+                        if (board[row][col] === '') {
+                            board[row][col] = 'X';
+                            const score = minimax(board, depth + 1, true);
+                            board[row][col] = '';
+                            bestScore = Math.min(score, bestScore);
+                        }
+                    }
+                }
+                return bestScore;
+            }
+        }
+
+        /**
+         * 评估游戏状态并返回分数
+         * @param {string} result 游戏结果
+         * @param {number} depth 当前搜索深度
+         * @returns 分数
+         */
+        function score(result, depth) {
+            if (result === 'O') {
+                return 10 - depth;
+            } else if (result === 'X') {
+                return depth - 10;
+            } else {
+                return 0;
+            }
+        }
+
+        /**
+         * 检查游戏是否结束并返回结果
+         * @returns 游戏结果：
+         *  - 'X'：X获胜
+         *  - 'O'：O获胜
+         *  - 'draw'：平局
+         *  - null：游戏未结束
+         */
+        function checkResult() {
+            // 检查每一行、每一列和对角线是否有一方获胜
+            for (let i = 0; i < 3; i++) {
+                if (board[i][0] === board[i][1] && board[i][1] === board[i][2] && board[i][0] !== '') {
+                    return board[i][0]; // 行获胜
+                }
+                if (board[0][i] === board[1][i] && board[1][i] === board[2][i] && board[0][i] !== '') {
+                    return board[0][i]; // 列获胜
+                }
+            }
+
+            // 检查两条对角线是否有一方获胜
+            if (board[0][0] === board[1][1] && board[1][1] === board[2][2] && board[0][0] !== '') {
+                return board[0][0]; // 主对角线获胜
+            }
+            if (board[0][2] === board[1][1] && board[1][1] === board[2][0] && board[0][2] !== '') {
+                return board[0][2]; // 副对角线获胜
+            }
+
+            // 检查游戏是否平局
+            if (board.flat().every(cell => cell !== '')) {
+                return 'draw'; // 游戏平局
+            }
+
+            return null; // 游戏未结束
+        }
+
+
+        /**
+         * 检查游戏是否结束
+         */
+        function checkWinner() {
+            const winningCombos = [
+                [[0, 0], [0, 1], [0, 2]],
+                [[1, 0], [1, 1], [1, 2]],
+                [[2, 0], [2, 1], [2, 2]],
+                [[0, 0], [1, 0], [2, 0]],
+                [[0, 1], [1, 1], [2, 1]],
+                [[0, 2], [1, 2], [2, 2]],
+                [[0, 0], [1, 1], [2, 2]],
+                [[0, 2], [1, 1], [2, 0]],
+            ];
+
+            for (const combo of winningCombos) {
+                const [a, b, c] = combo;
+                if (board[a[0]][a[1]] && board[a[0]][a[1]] === board[b[0]][b[1]] && board[a[0]][a[1]] === board[c[0]][c[1]]) {
+                    document.getElementById('message').textContent = `${board[a[0]][a[1]]}赢了！`;
+                    return true;
+                }
+            }
+
+            if (board.flat().every(cell => cell !== '')) {
+                document.getElementById('message').textContent = '平局！';
+                return true;
+            }
+
+            return false;
+        }
+    </script>
+</body>
+
+</html>
