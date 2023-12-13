@@ -14,6 +14,7 @@
             <h2>2023年12月13日</h2>
             <ol>
                 <li><a href="./20231213/晶莹的雪花.html">晶莹的雪花</a></li>
+                <li><a href="./20231213/大江门开（我与一座城）.html">大江门开（我与一座城）</a></li>
             </ol>
         </li>
         <li>
@@ -44,6 +45,30 @@
         <ul>
             <li>字体解决方案：<a href="https://github.com/chawyehsu/lxgw-wenkai-webfont">chawyehsu/lxgw-wenkai-webfont</a></li>
             <li>拼音解决方案：<a href="https://github.com/sxei/pinyinjs">sxei/pinyinjs</a></li>
+            <li class="wrapped">
+                <style>
+                    li.wrapped pre {
+                        margin: 0 0;
+                        display: flex;
+                    }
+
+                    li.wrapped textarea {
+                        color: unset;
+                        font-size: 14pt;
+                        font-family: monospace;
+                        background-color: transparent;
+                        border: none;
+                        outline: none;
+                    }
+
+                    li.wrapped textarea:focus {
+                        outline: none;
+                    }
+                </style>
+                <pre>To wrap lines with a p tag by using the following pattern in VSCode:</pre>
+                <pre>Pattern:<textarea readonly rows="1">^\s+([^<>]+)$</textarea></pre>
+                <pre>Replace:<textarea readonly rows="1"><p>$1</p></textarea></pre>
+            </li>
         </ul>
     </footer>
 </body>
