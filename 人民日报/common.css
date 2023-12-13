@@ -10,8 +10,8 @@ body,
 ul,
 li,
 a {
-    color: #fff79f;
-    background-color: #1e1e1e;
+    color: #ffffffab;
+    background-color: black;
 }
 
 body {
@@ -35,7 +35,8 @@ li>a {
 }
 
 li>a {
-    text-decoration: dotted underline 3px;
+    text-decoration: none;
+    border-bottom: dotted 2px #ffffffab;
 }
 
 footer,
