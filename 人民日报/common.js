@@ -43,10 +43,10 @@ window.onload = function () {
                     const pinyin = pinyinUtil.getPinyin(c, ' ', true, false);
 
                     rt.innerText = pinyin;
-                    // rt.style.display = 'none';
-                    // ruby.addEventListener('click', function () {
-                    //     this.style.display = this.style.display === 'none' ? 'block' : 'none';
-                    // }.bind(rt));
+                    rt.style.display = 'none';
+                    ruby.addEventListener('click', function () {
+                        this.style.display = this.style.display === 'none' ? 'block' : 'none';
+                    }.bind(rt));
                     ruby.appendChild(rt);
                 }
 
