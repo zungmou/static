@@ -29,24 +29,24 @@ const 标点符号 = '，。！？；：、（）《》“”‘’——…—�
 window.onload = function () {
     function proc(elements) {
         for (const p of elements) {
-            const text = p.textContent.split('');
+            const chars = p.textContent.split('');
 
             p.textContent = '';
 
-            for (const t of text) {
+            for (const c of chars) {
                 const ruby = document.createElement('ruby');
 
-                ruby.innerText = t;
+                ruby.innerText = c;
 
-                if (!标点符号.includes(t)) {
+                if (!标点符号.includes(c)) {
                     const rt = document.createElement('rt');
-                    const pinyin = pinyinUtil.getPinyin(t, ' ', true, true);
+                    const pinyin = pinyinUtil.getPinyin(c, ' ', true, false);
 
                     rt.innerText = pinyin;
-                    rt.style.display = 'none';
-                    ruby.addEventListener('click', function () {
-                        this.style.display = this.style.display === 'none' ? 'block' : 'none';
-                    }.bind(rt));
+                    // rt.style.display = 'none';
+                    // ruby.addEventListener('click', function () {
+                    //     this.style.display = this.style.display === 'none' ? 'block' : 'none';
+                    // }.bind(rt));
                     ruby.appendChild(rt);
                 }
 

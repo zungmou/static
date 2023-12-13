@@ -31,8 +31,9 @@ p.author {
 p,
 li>a {
     font-size: 18pt;
-    line-height: 26pt;
+    line-height: 32pt;
 }
+
 
 li>a {
     text-decoration: none;
@@ -46,5 +47,6 @@ footer a {
 }
 
 ruby rt {
-    font-size: 12pt;
+    margin: auto 0;
+    /* font-size: 12pt; */
 }
