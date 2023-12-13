@@ -70,7 +70,7 @@ window.onload = function () {
             setTimeout(waitForUtil, 1000);
         }
         else {
-            proc(document.querySelectorAll('p'));
+            proc(document.querySelectorAll('body > p'));
             proc(document.querySelectorAll('h1'));
         }
     }

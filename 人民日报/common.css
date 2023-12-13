@@ -28,7 +28,7 @@ p.author {
     font-style: italic;
 }
 
-p,
+body>p,
 li>a {
     font-size: 18pt;
     line-height: 32pt;
