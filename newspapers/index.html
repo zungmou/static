@@ -54,6 +54,7 @@
         #articles li ol li a {
             font-size: 18pt;
             color: #e2e72a;
+            cursor: pointer;
         }
 
         #article {
@@ -227,7 +228,7 @@
             const article = newspapers[newspaper][date][index];
             const htmlBuilder = [];
 
-            htmlBuilder.push(`<button onclick="closeArticle();">返回</button>`);
+            // htmlBuilder.push(`<button onclick="closeArticle();">返回</button>`);
             htmlBuilder.push(`<h1>${article['title']}</h1>`);
             htmlBuilder.push(`<cite>${article['author']}</cite>`);
             htmlBuilder.push(`<p>${article['content'].replace(/{\n}/g, '</p><p>')}</p>`);
@@ -268,6 +269,8 @@
 
             oldScroll = (window.scrollX, window.scrollY);
             window.scrollTo(0, 0);
+
+            window.location.hash = `#${newspaper}-${date}-${index}`;
         }
         function onload() {
             const newspaper_selector = document.getElementById('newspaper_selector');
@@ -301,6 +304,15 @@
         }
 
         window.addEventListener('load', onload);
+        window.addEventListener('hashchange', function () {
+            const hash = window.location.hash.replace(/^#/, '').split('-');
+
+            if (hash.length === 3) {
+                openArticle(hash[0], hash[1], hash[2]);
+            } else {
+                closeArticle();
+            }
+        });
     </script>
 </head>
 
