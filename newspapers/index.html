@@ -302,6 +302,14 @@
             const newspaper_selector = document.getElementById('newspaper_selector');
             const articles = document.getElementById('articles');
 
+            for (const newspaper of Object.keys(newspapers)) {
+                const option = document.createElement('option');
+
+                option.value = newspaper;
+                option.innerText = newspaper;
+                newspaper_selector.appendChild(option);
+            }
+
             function select_newspaper(e) {
                 const newspaper = e.target.value;
                 const htmlBuilder = [];
@@ -343,10 +351,7 @@
 </head>
 
 <body>
-    <select id="newspaper_selector">
-        <option value="人民日报">人民日报</option>
-        <option value="经济观察报">经济观察报</option>
-    </select>
+    <select id="newspaper_selector"></select>
     <article id="article"></article>
     </article>
     <ul id="articles">
